@@ -90,7 +90,9 @@ def main():
         with col19:
             if st.button("Predict Loss Ratio"):
                   st.write(age) 
-    cola, colb = st.columns(2)      
+    cola, colb = st.columns(2)
+    st.markdown("***This is a Proof of Concept Machine Learning Software Developed by Virtual Analytics and Advernet Africa***")
+    st.markdown("© 2024 [Virtual Analytics](https://virtualanalytics.co.ke) & [Advernet Africa](https://www.advernet.africa). All rights reserved.")     
     with cola:
         st.image('static/logos/VA_Logo.png', width=150)
 
