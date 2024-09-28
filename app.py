@@ -1,11 +1,22 @@
 import streamlit as st
 import datetime
+from collect_user_input import collect_user_input
+from cross_churn_pred import crose_churn_model
 
 def main():
     
     st.header("Insurance Attributes Prediction System")
     st.write("Area of Focus: Cross Selling, Customer Churn, Loss Ratio")
     st.divider()
+    
+    cola, colb = st.columns(2)
+
+    
+    with cola:
+        st.image('static/logos/VA_Logo.png', width=150)
+
+    with colb:
+        st.image('static/logos/NewLogoNoBgDraft5.png', width=150)
     tab1, tab2, tab3 = st.tabs(["Prediction", "Interpretation", "Automation"])
 
     with tab1:
@@ -18,17 +29,19 @@ def main():
                     gender = st.radio("Gender",
                                     ["male 👦🏽", "female 👧🏻"])
                 with col2:
-                    age = st.number_input("Age", value=0)
+                    age = st.number_input("Date of Birth", value=0)
 
                 col3, col4 = st.columns(2)
                 with col3:
                     county = st.text_input("County")
                 with col4:
                     sub_county = st.text_input("Sub-county")
+                driving_license = st.radio("Driving License",
+                                    ["Yes", "No"])
             # st.divider()
             
             with st.expander("Insurance Historical Data"):
-                
+                agent_name = st.text_input("Agent Name")
                 col5, col6 = st.columns(2)
                 with col5:
                     previously_insured = st.radio("Previously Insured",
@@ -73,7 +86,12 @@ def main():
             
         with col17:
             if st.button("Predict Cross Selling"):
-                st.write(age) 
+                user_data = collect_user_input(gender, age, driving_license, sub_county, previously_insured, vehicle_year_of_manufacture, 
+                       vehicle_damage, annual_premium, agent_name, life_policy_start_date)
+                cross_churn_predictions, evaluation = crose_churn_model(user_data)
+                st.write(f"The is a  {(cross_churn_predictions.ravel()[1]*100).round(2)}% probabilty that the customer will be interested")
+                st.write(f"Model Performance")
+                st.write(evaluation)
         with col18:
             if st.button("Predict Churn"):
                 st.write(age) 
