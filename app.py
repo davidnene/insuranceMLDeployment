@@ -8,15 +8,7 @@ def main():
     st.header("Insurance Attributes Prediction System")
     st.write("Area of Focus: Cross Selling, Customer Churn, Loss Ratio")
     st.divider()
-    
-    cola, colb = st.columns(2)
 
-    
-    with cola:
-        st.image('static/logos/VA_Logo.png', width=150)
-
-    with colb:
-        st.image('static/logos/NewLogoNoBgDraft5.png', width=150)
     tab1, tab2, tab3 = st.tabs(["Prediction", "Interpretation", "Automation"])
 
     with tab1:
@@ -97,8 +89,13 @@ def main():
                 st.write(age) 
         with col19:
             if st.button("Predict Loss Ratio"):
-                st.write(age)       
-                
+                  st.write(age) 
+    cola, colb = st.columns(2)      
+    with cola:
+        st.image('static/logos/VA_Logo.png', width=150)
+
+    with colb:
+        st.image('static/logos/NewLogoNoBgDraft5.png', width=150)
         
     
 
