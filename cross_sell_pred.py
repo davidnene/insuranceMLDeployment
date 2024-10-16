@@ -2,10 +2,10 @@ import joblib
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
-churn_pred_model_path = "Utils/Cross_Sell_Prediction/best_cross_sell_model.pkl"
-churn_pred_model = joblib.load(churn_pred_model_path)
+cross_sell_pred_model_path = "Utils/Cross_Sell_Prediction/best_cross_sell_model.pkl"
+cross_sell_pred_model = joblib.load(cross_sell_pred_model_path)
 
-def crose_churn_model(user_input_data):
+def cross_sell_model(user_input_data):
     cols = ['Customer_Date_of_Birth',
  'Driving_License',
  'Previously_Insured',
@@ -141,7 +141,7 @@ def crose_churn_model(user_input_data):
     X_data = pd.get_dummies(user_input_data)
     X_data = X_data.reindex(columns=cols, fill_value=0)
     
-    predictions = churn_pred_model.predict_proba(X_data)
+    predictions = cross_sell_pred_model.predict_proba(X_data)
     model_evaluation = {"accuracy": 70.966,
                         "recall": 90.795,
                         "precision": 28.5526,
