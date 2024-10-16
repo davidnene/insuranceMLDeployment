@@ -105,7 +105,7 @@ def main():
             if performance:  
                 st.write(st.session_state.evaluation)
         with col18:
-            if st.button("Cross Sell Model Feature Importance"):
+            if st.button("Display Cross Sell Model Feature Importance"):
                 st.image('Utils/Cross_Sell_Prediction/cross_sell_feature_importance.png', )
 
     with tab2:
@@ -188,22 +188,22 @@ def main():
                 if st.button("Predict Loss Ratio"):
                     # Collect all input data into a dictionary or dataframe for model input
                     loss_ratio_data = {
-                                "Gender": [gender],  # Convert Male to 1, Female to 0
-                                "Type_of_Life_Insurance": [type_of_life_insurance],  # Encode insurance type
+                                "Gender": [gender], 
+                                "Type_of_Life_Insurance": [type_of_life_insurance],  
                                 "Sum_Assured": [sum_assured],
                                 "Policy_Term": [policy_term],
-                                "Rider_Info": [rider_info],  # Convert Yes/No to 1/0
-                                "Premium_Payment_Frequency": [premium_payment_frequency],  # Encode payment frequency
-                                "Occupation": [occupation],  # Keep as string, may require further encoding
-                                "Education_Level": [education_level],  # Encode education level
-                                "Marital_Status": [marital_status],  # Encode marital status
+                                "Rider_Info": [rider_info],  
+                                "Premium_Payment_Frequency": [premium_payment_frequency],  
+                                "Occupation": [occupation],  
+                                "Education_Level": [education_level],  
+                                "Marital_Status": [marital_status],  
                                 "Dependents": [dependents],
-                                "Medical_Conditions": [medical_conditions],  # Convert Yes/No to 1/0
-                                "Smoker_Status": [smoker_status],  # Convert Smoker/Non-Smoker to 1/0
+                                "Medical_Conditions": [medical_conditions],  
+                                "Smoker_Status": [smoker_status],  
                                 "BMI": [bmi],
-                                "Exercise_and_Lifestyle": [exercise_and_lifestyle],  # Active=1, Sedentary=0
-                                "Payment_History": [payment_history],  # Encode payment history
-                                "Customer_Interaction_Frequency": [customer_interaction_frequency],  # Encode interaction frequency
+                                "Exercise_and_Lifestyle": [exercise_and_lifestyle],  
+                                "Payment_History": [payment_history],  
+                                "Customer_Interaction_Frequency": [customer_interaction_frequency],  
                                 "Inflation_Rate (%)": [inflation_rate],
                                 # "Total_Claims_Paid": [total_claims_paid],
                                 # "Earned_Premium": [earned_premium],
@@ -218,7 +218,7 @@ def main():
                 if lr_performance:  
                     st.write(st.session_state.lr_evaluation)
             with col20:
-                if st.button("Loss Ratio Model Feature Importance"):
+                if st.button("Display Loss Ratio Model Feature Importance"):
                     st.image('Utils/Loss_ratio_prediction/loss_ratio_feature_importance.png', )
                 
     cola, colb = st.columns(2)
