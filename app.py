@@ -173,15 +173,15 @@ def main():
                 with col16:
                     payment_history = st.radio("Payment History", ["Good", "Average", "Poor"])
 
-                col17, col18 = st.columns(2)
-                with col17:
-                    earned_premium = st.number_input("Earned Premium (Kes)", min_value=0.0, value=0.0)
-                with col18:
-                    total_claims_paid = st.number_input("Total Claims Paid (Kes)", min_value=0.0, value=0.0)
+                # col17, col18 = st.columns(2)
+                # with col17:
+                #     earned_premium = st.number_input("Earned Premium (Kes)", min_value=0.0, value=0.0)
+                # with col18:
+                #     total_claims_paid = st.number_input("Total Claims Paid (Kes)", min_value=0.0, value=0.0)
 
             with st.expander("Economic Factors"):
                 inflation_rate = st.number_input("Inflation Rate (%)", min_value=0.0, value=0.0)
-                loss_ratio = st.number_input("Loss Ratio (%)", min_value=0.0, value=0.0)
+                # loss_ratio = st.number_input("Loss Ratio (%)", min_value=0.0, value=0.0)
 
             col19, col20 = st.columns(2)
             with col19:
@@ -205,9 +205,9 @@ def main():
                                 "Payment_History": [payment_history],  # Encode payment history
                                 "Customer_Interaction_Frequency": [customer_interaction_frequency],  # Encode interaction frequency
                                 "Inflation_Rate (%)": [inflation_rate],
-                                "Total_Claims_Paid": [total_claims_paid],
-                                "Earned_Premium": [earned_premium],
-                                "Loss_Ratio (%)": [loss_ratio],
+                                # "Total_Claims_Paid": [total_claims_paid],
+                                # "Earned_Premium": [earned_premium],
+                                # "Loss_Ratio (%)": [loss_ratio],
                                 "Age": [age]}
                     lr_m_data = pd.DataFrame(loss_ratio_data)
                     st.session_state.lr_predictions, st.session_state.lr_pred_proba, st.session_state.lr_evaluation = lr_model(lr_m_data)
