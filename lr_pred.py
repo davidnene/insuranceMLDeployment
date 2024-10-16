@@ -1,8 +1,9 @@
 import joblib
 import pandas as pd
+from xgboost import XGBClassifier
 from sklearn.ensemble import RandomForestClassifier
 
-lr_pred_model_path = "Utils/Cross_Sell_Prediction/best_loss_ratio_model.pkl"
+lr_pred_model_path = "Utils/Loss_ratio_prediction/best_loss_ratio_model.pkl"
 lr_pred_model = joblib.load(lr_pred_model_path)
 
 def lr_model(user_input_data):
@@ -22,13 +23,14 @@ def lr_model(user_input_data):
     X_data = pd.get_dummies(user_input_data)
     X_data = X_data.reindex(columns=cols, fill_value=0)
     
-    predictions = lr_pred_model.predict_proba(X_data)
+    predictions = lr_pred_model.predict(X_data)
+    prediction_proba = lr_pred_model.predict_proba(X_data)
     model_evaluation = {"accuracy": 81.167,
                         "recall": 81.167,
                         "precision": 75.848,
                         "f1_score": 78.01
                                         }   
     
-    return predictions, model_evaluation
+    return predictions, prediction_proba, model_evaluation
     
 
