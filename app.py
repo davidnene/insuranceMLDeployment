@@ -2,6 +2,7 @@ import streamlit as st
 import datetime
 from collect_user_input import collect_user_input
 from cross_churn_pred import crose_churn_model
+import numpy as np
 
 def main():
     
@@ -9,6 +10,11 @@ def main():
     st.write("Area of Focus: Cross Selling, Customer Churn, Loss Ratio")
     st.divider()
 
+    if 'evaluation' not in st.session_state:
+        st.session_state.evaluation = None
+    
+    if 'cross_churn_predictions' not in st.session_state:
+        st.session_state.cross_churn_predictions = None
     tab1, tab2, tab3 = st.tabs(["Prediction", "Interpretation", "Automation"])
 
     with tab1:
@@ -80,10 +86,12 @@ def main():
             if st.button("Predict Cross Selling"):
                 user_data = collect_user_input(gender, age, driving_license, sub_county, previously_insured, vehicle_year_of_manufacture, 
                        vehicle_damage, annual_premium, agent_name, life_policy_start_date)
-                cross_churn_predictions, evaluation = crose_churn_model(user_data)
-                st.write(f"The is a  {(cross_churn_predictions.ravel()[1]*100).round(2)}% probabilty that the customer will be interested")
-                st.write(f"Model Performance")
-                st.write(evaluation)
+                st.session_state.cross_churn_predictions, st.session_state.evaluation = crose_churn_model(user_data)
+            if st.session_state.cross_churn_predictions is not None:
+                st.write(f"There is a  {(st.session_state.cross_churn_predictions.ravel()[1]*100).round(2)}% probabilty that the customer will be interested")
+            performance = st.checkbox(f"Show Model Performance")
+            if performance:  
+                st.write(st.session_state.evaluation)
         with col18:
             if st.button("Predict Churn"):
                 st.write(age) 
