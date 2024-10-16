@@ -39,7 +39,7 @@ def main():
                     gender = st.radio("Gender",
                                     ["male 👦🏽", "female 👧🏻"])
                 with col2:
-                    age = st.number_input("Date of Birth", value=0)
+                    age = st.number_input("Age", value=0)
 
                 col3, col4 = st.columns(2)
                 with col3:
