@@ -31,7 +31,7 @@ def main():
 
     with tab1:
         with st.container(border=True):
-            st.subheader("Customer Data Input")
+            st.subheader("Cross Sell Customer Data Input")
             
             with st.expander("Demographics Data"):
                 col1, col2 = st.columns(2)
@@ -50,7 +50,7 @@ def main():
                                     ["Yes", "No"])
             # st.divider()
             
-            with st.expander("Insurance Historical Data"):
+            with st.expander("Operational Data"):
                 agent_name = st.text_input("Agent Name")
                 col5, col6 = st.columns(2)
                 with col5:
@@ -59,37 +59,35 @@ def main():
                 with col6:
                     vehicle_year_of_manufacture = st.date_input("Vehicle Year of Manufacture", format='DD-MM-YYYY', min_value=datetime.date(1995,1,1), max_value=datetime.date(2024, 12, 12))
             
-                col7, col8 = st.columns(2)
-                with col7:
-                    annual_premium = st.number_input("Annual Premium(Kes)", min_value=0.0)
                 
-                with col8:
-                    vehicle_damage = st.radio("Vehicle Damage",
-                                            ["Yes", "No"])
             
                 col9, col10 = st.columns(2)
                 with col9:
-                    life_policy_start_date = st.date_input("Life Policy Start Date", format='DD-MM-YYYY', min_value=datetime.date(1995,1,1), max_value=datetime.date(2024, 12, 12))
+                    vehicle_damage = st.radio("Vehicle Damage",
+                                            ["Yes", "No"])
                 with col10:
-                    customer_tenure = st.number_input("Customer Tenure", min_value=0, max_value=20)
+                    life_policy_start_date = st.date_input("Life Policy Start Date", format='DD-MM-YYYY', min_value=datetime.date(1995,1,1), max_value=datetime.date(2024, 12, 12))
+                # with col10:
+                #     customer_tenure = st.number_input("Customer Tenure", min_value=0, max_value=20)
                 
-                col11, col12 = st.columns(2)
-                with col11:
-                    last_interaction = st.date_input("Last Interaction", format='DD-MM-YYYY', min_value=datetime.date(1995,1,1), max_value=datetime.date(2024, 12, 12))
-                with col12:
-                    renewal_count = st.number_input("Renewal Count",min_value=0)
+                # col11, col12 = st.columns(2)
+                # with col11:
+                #     last_interaction = st.date_input("Last Interaction", format='DD-MM-YYYY', min_value=datetime.date(1995,1,1), max_value=datetime.date(2024, 12, 12))
+                # with col12:
+                #     renewal_count = st.number_input("Renewal Count",min_value=0)
             # st.divider()
             
-            with st.expander("Claims Historical Data"):
-                col13, col14 = st.columns(2)
-                with col13:
-                    total_claims = st.number_input("Total Claims", min_value=0)
-                with col14:
-                    total_claims_paid = st.number_input("Total Claims Paid", min_value=0)
+            with st.expander("Financial Data"):
+                annual_premium = st.number_input("Annual Premium(Kes)", value=10000)
+                # col13, col14 = st.columns(2)
+                # with col13:
+                #     total_claims = st.number_input("Total Claims", min_value=0)
+                # with col14:
+                #     total_claims_paid = st.number_input("Total Claims Paid", min_value=0)
                 
-                col15, col16 = st.columns(2)
-                with col15:
-                    premium_increase = st.number_input("Premium Inrease(%)", min_value=0)
+                # col15, col16 = st.columns(2)
+                # with col15:
+                #     premium_increase = st.number_input("Premium Inrease(%)", min_value=0)
             # st.divider()
             
         col17, col18 = st.columns(2)
@@ -98,9 +96,13 @@ def main():
             if st.button("Predict Cross Selling"):
                 user_data = collect_user_input(gender, age, driving_license, sub_county, previously_insured, vehicle_year_of_manufacture, 
                        vehicle_damage, annual_premium, agent_name, life_policy_start_date)
-                st.session_state.cross_sell_predictions, st.session_state.evaluation = cross_sell_model(user_data)
+                st.session_state.pred_output, st.session_state.cross_sell_predictions, st.session_state.evaluation = cross_sell_model(user_data)
             if st.session_state.cross_sell_predictions is not None:
-                st.write(f"There is a  {(st.session_state.cross_sell_predictions.ravel()[1]*100).round(2)}% probabilty that the customer will be interested")
+                if st.session_state.pred_output == 0:
+                    st.write("The customer will not be interested")
+                elif st.session_state.pred_output == 1:
+                    st.write("The customer will be interested.")
+                st.write(f"(Probability of interest: {(st.session_state.cross_sell_predictions.ravel()[1]*100).round(2)}%)")
             performance = st.checkbox(f"Show Model Performance")
             if performance:  
                 st.write(st.session_state.evaluation)
@@ -120,7 +122,34 @@ def main():
                 with col2:
                     age = st.number_input("Age", min_value=0, max_value=100, value=30)
 
-            with st.expander("Insurance Data"):
+                col9, col10 = st.columns(2)
+                with col9:
+                    education_level = st.selectbox("Education Level", 
+                                                ["High School", "Undergraduate", "Postgraduate"])
+                with col10:
+                    marital_status = st.selectbox("Marital Status", 
+                                                ["Single", "Married", "Divorced"])
+                
+                cold, cole = st.columns(2)
+                with cold:
+                    occupation = st.text_input("Occupation")
+                with cole:
+                    dependents = st.number_input("Dependents", min_value=0, max_value=10, value=0)
+                
+                col11, col12 = st.columns(2)
+                with col11:
+                    medical_conditions = st.radio("Medical Conditions", ["Yes", "No"])
+                with col12:
+                    smoker_status = st.radio("Smoker Status", ["Smoker", "Non-Smoker"])
+
+                col13, col14 = st.columns(2)
+                with col13:
+                    bmi = st.number_input("BMI", min_value=0.0, max_value=50.0, value=25.0)
+                with col14:
+                    exercise_and_lifestyle = st.radio("Exercise and Lifestyle", ["Active", "Sedentary"])
+
+
+            with st.expander("Operational Data"):
                 col3, col4 = st.columns(2)
                 with col3:
                     type_of_life_insurance = st.selectbox("Type of Life Insurance", 
@@ -134,38 +163,10 @@ def main():
                 with col6:
                     rider_info = st.radio("Rider Info", ["Yes", "No"])
 
-            with st.expander("Customer Data"):
-                col7, col8 = st.columns(2)
-                with col7:
-                    premium_payment_frequency = st.selectbox("Premium Payment Frequency", 
+                premium_payment_frequency = st.selectbox("Premium Payment Frequency", 
                                                             ["Monthly", "Quarterly", "Annually"])
-                with col8:
-                    occupation = st.text_input("Occupation")
+    
 
-                col9, col10 = st.columns(2)
-                with col9:
-                    education_level = st.selectbox("Education Level", 
-                                                ["High School", "Undergraduate", "Postgraduate"])
-                with col10:
-                    marital_status = st.selectbox("Marital Status", 
-                                                ["Single", "Married", "Divorced"])
-
-                dependents = st.number_input("Dependents", min_value=0, max_value=10, value=0)
-
-            with st.expander("Health and Lifestyle Data"):
-                col11, col12 = st.columns(2)
-                with col11:
-                    medical_conditions = st.radio("Medical Conditions", ["Yes", "No"])
-                with col12:
-                    smoker_status = st.radio("Smoker Status", ["Smoker", "Non-Smoker"])
-
-                col13, col14 = st.columns(2)
-                with col13:
-                    bmi = st.number_input("BMI", min_value=0.0, max_value=50.0, value=25.0)
-                with col14:
-                    exercise_and_lifestyle = st.radio("Exercise and Lifestyle", ["Active", "Sedentary"])
-
-            with st.expander("Insurance Interaction Data"):
                 col15, col16 = st.columns(2)
                 with col15:
                     customer_interaction_frequency = st.selectbox("Customer Interaction Frequency", 
@@ -179,7 +180,7 @@ def main():
                 # with col18:
                 #     total_claims_paid = st.number_input("Total Claims Paid (Kes)", min_value=0.0, value=0.0)
 
-            with st.expander("Economic Factors"):
+            with st.expander("Financial Data"):
                 inflation_rate = st.number_input("Inflation Rate (%)", min_value=0.0, value=0.0)
                 # loss_ratio = st.number_input("Loss Ratio (%)", min_value=0.0, value=0.0)
 
@@ -213,7 +214,8 @@ def main():
                     st.session_state.lr_predictions, st.session_state.lr_pred_proba, st.session_state.lr_evaluation = lr_model(lr_m_data)
                 labels = ["High", "Low", "Medium"]
                 if st.session_state.lr_predictions is not None:
-                    st.write(f'There is a {round(st.session_state.lr_pred_proba[0][int(st.session_state.lr_predictions)]*100,2)}% probability that the Loss Ratio will be {labels[int(st.session_state.lr_predictions)]}')
+                    st.write(f'The Loss Ratio will be {labels[int(st.session_state.lr_predictions)]}.')
+                    st.write(f'(Probability: {round(st.session_state.lr_pred_proba[0][int(st.session_state.lr_predictions)]*100,2)}%)')
                 lr_performance = st.checkbox(f"Show Loss Ratio Model Performance")
                 if lr_performance:  
                     st.write(st.session_state.lr_evaluation)
