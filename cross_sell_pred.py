@@ -141,6 +141,7 @@ def cross_sell_model(user_input_data):
     X_data = pd.get_dummies(user_input_data)
     X_data = X_data.reindex(columns=cols, fill_value=0)
     
+    pred_output = cross_sell_pred_model.predict(X_data)
     predictions = cross_sell_pred_model.predict_proba(X_data)
     model_evaluation = {"accuracy": 70.966,
                         "recall": 90.795,
@@ -148,6 +149,6 @@ def cross_sell_model(user_input_data):
                         "f1_score": 43.4434
                                         }   
     
-    return predictions, model_evaluation
+    return pred_output, predictions, model_evaluation
     
 
