@@ -9,7 +9,7 @@ import pandas as pd
 def main():
     
     st.header("Insurance Attributes Prediction System")
-    st.write("Area of Focus: Cross Selling, Customer Churn, Loss Ratio")
+    st.write("Area of Focus: Cross Selling, Loss Ratio, Customer Churn")
     st.divider()
 
     if 'evaluation' not in st.session_state:
@@ -222,7 +222,8 @@ def main():
             with col20:
                 if st.button("Display Loss Ratio Model Feature Importance"):
                     st.image('Utils/Loss_ratio_prediction/loss_ratio_feature_importance.png', )
-                
+        with tab3:
+            st.subheader("Coming Soon!💡 Development in progress..")      
     cola, colb = st.columns(2)
     st.markdown("***This is a Proof of Concept Machine Learning Software Developed by Virtual Analytics and Advernet Africa***")
     st.markdown("© 2024 [Virtual Analytics](https://virtualanalytics.co.ke) & [Advernet Africa](https://www.advernet.africa). All rights reserved.")     
