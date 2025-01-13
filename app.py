@@ -176,7 +176,7 @@ def main():
                                 names=labels,
                                 values=values,
                                 title="Prediction Summary",
-                                color_discrete_sequence=["#636EFA", "#EF553B"],  
+                                color_discrete_sequence=["#EF553B", "#636EFA"],  
                             )
                             fig.update_layout(
                                 height=350,  
