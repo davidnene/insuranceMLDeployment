@@ -112,7 +112,7 @@ def main():
         
         #Batch Processing
         st.subheader("Batch Processing")
-        with st.expander("Batch Prediciton"):
+        with st.expander("Batch Prediction"):
             uploaded_file = st.file_uploader("Upload CSV File", type=["csv"])
 
             if uploaded_file:
