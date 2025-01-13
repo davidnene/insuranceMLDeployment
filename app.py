@@ -5,6 +5,7 @@ from cross_sell_pred import cross_sell_model
 from lr_pred import lr_model
 import numpy as np
 import pandas as pd
+import plotly.express as px
 
 def main():
     
@@ -162,6 +163,30 @@ def main():
                         # Display the updated dataset
                         st.write("Predictions:")
                         st.dataframe(data[['id','prediction', 'probability(%)']])
+                        
+                        # Visualize predictions                         
+                        if "prediction" in data.columns:
+                            # Calculate the counts for each label
+                            prediction_counts = data["prediction"].value_counts()
+                            labels = prediction_counts.index
+                            values = prediction_counts.values
+
+                            # Create a pie chart using Plotly
+                            fig = px.pie(
+                                names=labels,
+                                values=values,
+                                title="Prediction Summary",
+                                color_discrete_sequence=["#636EFA", "#EF553B"],  
+                            )
+                            fig.update_layout(
+                                height=350,  
+                                width=350,   
+                                title=dict(font=dict(size=16))
+)
+
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.warning("Please upload data and generate predictions first.")
                 else:
                     st.warning(f"The uploaded dataset must contain the following columns: {', '.join(required_columns)}")
 
@@ -277,6 +302,84 @@ def main():
             with col20:
                 if st.button("Display Loss Ratio Model Feature Importance"):
                     st.image('Utils/Loss_ratio_prediction/loss_ratio_feature_importance.png', )
+            # Add a new section for batch processing
+            st.subheader("Batch Processing")
+            
+            with st.expander("Loss Ratio Prediciton"):
+                uploaded_file = st.file_uploader("Upload CSV File for Batch Prediction", type=["csv"])
+
+                if uploaded_file:
+                    # Load the dataset
+                    data_lr = pd.read_csv(uploaded_file)
+                    
+                    # Display the uploaded dataset
+                    uploaded_data_lr = st.checkbox(f"Show Uploaded Data")
+                    if uploaded_data_lr:  
+                        st.write("Uploaded Dataset")
+                        st.dataframe(data_lr)
+
+                    # Validate required columns in the dataset
+                    required_columns_lr = [
+                        "Gender", "Type_of_Life_Insurance", "Sum_Assured", "Policy_Term", "Rider_Info",
+                        "Premium_Payment_Frequency", "Occupation", "Education_Level", "Marital_Status",
+                        "Dependents", "Medical_Conditions", "Smoker_Status", "BMI", "Exercise_and_Lifestyle",
+                        "Payment_History", "Customer_Interaction_Frequency", "Inflation_Rate (%)", "Age"
+                    ]
+
+                    if all(col in data_lr.columns for col in required_columns):
+                        if st.button("Predict for Uploaded Data"):
+                            # Make batch predictions
+                            predictions = []
+                            probabilities = []
+
+                            for _, row in data_lr.iterrows():
+                                loss_ratio_data = {
+                                    "Gender": [row["Gender"]],
+                                    "Type_of_Life_Insurance": [row["Type_of_Life_Insurance"]],
+                                    "Sum_Assured": [row["Sum_Assured"]],
+                                    "Policy_Term": [row["Policy_Term"]],
+                                    "Rider_Info": [row["Rider_Info"]],
+                                    "Premium_Payment_Frequency": [row["Premium_Payment_Frequency"]],
+                                    "Occupation": [row["Occupation"]],
+                                    "Education_Level": [row["Education_Level"]],
+                                    "Marital_Status": [row["Marital_Status"]],
+                                    "Dependents": [row["Dependents"]],
+                                    "Medical_Conditions": [row["Medical_Conditions"]],
+                                    "Smoker_Status": [row["Smoker_Status"]],
+                                    "BMI": [row["BMI"]],
+                                    "Exercise_and_Lifestyle": [row["Exercise_and_Lifestyle"]],
+                                    "Payment_History": [row["Payment_History"]],
+                                    "Customer_Interaction_Frequency": [row["Customer_Interaction_Frequency"]],
+                                    "Inflation_Rate (%)": [row["Inflation_Rate (%)"]],
+                                    "Age": [row["Age"]]
+                                }
+
+                                # Convert to DataFrame for model input
+                                lr_m_data = pd.DataFrame(loss_ratio_data)
+
+                                # Get predictions and probabilities
+                                pred, proba, _ = lr_model(lr_m_data)
+                                predictions.append(pred[0])
+                                probabilities.append(proba[0][int(pred[0])] * 100)
+
+                            # Append predictions and probabilities to the dataset
+                            data_lr["Prediction"] = [labels[int(pred)] for pred in predictions]
+                            data_lr["Probability (%)"] = [round(prob, 2) for prob in probabilities]
+
+                            # Display the updated dataset with predictions
+                            st.write("Predictions")
+                            st.dataframe(data_lr)
+
+                            # Optionally, allow users to download the results
+                            csv_lr = data_lr.to_csv(index=False)
+                            st.download_button(
+                                label="Download Predictions as CSV",
+                                data=csv_lr,
+                                file_name="loss_ratio_predictions.csv",
+                                mime="text/csv"
+                            )
+                    else:
+                        st.warning(f"The uploaded dataset must contain the following columns: {', '.join(required_columns_lr)}")
         with tab3:
             st.subheader("Coming Soon!💡 Development in progress..")      
     cola, colb = st.columns(2)
