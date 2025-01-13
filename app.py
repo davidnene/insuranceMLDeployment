@@ -109,6 +109,61 @@ def main():
         with col18:
             if st.button("Display Cross Sell Model Feature Importance"):
                 st.image('Utils/Cross_Sell_Prediction/cross_sell_feature_importance.png', )
+        
+        #Batch Processing
+        st.subheader("Batch Processing")
+        with st.expander("Batch Prediciton"):
+            uploaded_file = st.file_uploader("Upload CSV File", type=["csv"])
+
+            if uploaded_file:
+                # Load the dataset
+                
+                data = pd.read_csv(uploaded_file)
+                data.columns = data.columns.str.lower()
+
+                # Display the uploaded dataset
+                uploaded_data = st.checkbox(f"Show Uploaded Data")
+                if uploaded_data:  
+                    st.write("Uploaded Dataset")
+                    st.dataframe(data)
+
+                # Ensure the necessary columns are present
+                required_columns = [
+                    "gender", "age", "driving_license", "sub_county", 
+                    "previously_insured", "vehicle_year_of_manufacture",
+                    "vehicle_damage", "annual_premium", "agent_name", "life_policy_start_date"
+                ]
+                
+                if all(col in data.columns for col in required_columns):
+                    if st.button("Predict for Uploaded Data"):
+                        # Collect user data for batch prediction
+                        predictions = []
+                        probabilities = []
+
+                        for _, row in data.iterrows():
+                            user_data = collect_user_input(
+                                row["gender"], row["age"], row["driving_license"], row["sub_county"],
+                                row["previously_insured"], row["vehicle_year_of_manufacture"],
+                                row["vehicle_damage"], row["annual_premium"], row["agent_name"], 
+                                row["life_policy_start_date"]
+                            )
+                            pred_output, pred_prob, st.session_state.evaluation = cross_sell_model(user_data)
+                            if pred_output == 0:
+                                pred_text = "Not Interested"
+                            elif pred_output == 1:
+                                pred_text = "Interested"
+                            predictions.append(pred_text)
+                            probabilities.append(pred_prob.ravel()[1] * 100)
+
+                        # Append predictions and probabilities to the dataset
+                        data["prediction"] = predictions
+                        data["probability(%)"] = [round(prob, 2) for prob in probabilities]
+
+                        # Display the updated dataset
+                        st.write("Predictions:")
+                        st.dataframe(data[['id','prediction', 'probability(%)']])
+                else:
+                    st.warning(f"The uploaded dataset must contain the following columns: {', '.join(required_columns)}")
 
     with tab2:
         with st.container(border=True):
